@@ -1,156 +1,162 @@
-// import http from 'k6/http';
-// import { check } from 'k6';
 
-// export const options = {
-//     vus: 5,
-//     duration: '10s', 
-// };
-
-// export default function () {
-//     // URLs for the requests
-//     const url1 = "https://api.getstan.app/api/v1/agora/user/join?channel=D6R8KYHG";
-//     const url2 = "https://api.getstan.app/api/v1/agora/channels?offset=0&pageSize=30&lastId=-1";
-//     const url3 = "https://api.getstan.app/api/v1/agora/club-gifts?channel=D6R8KYHG"; // New URL for the club gifts endpoint
-    
-//     // Common headers for all requests
-//     const params = {
-//         headers: {
-//             "Accept": "application/json, text/plain, */*",
-//             "gaid": "9af1c2ff-4a28-4032-ae0c-b256b9258fe8",
-//             "AppVersion": "113",
-//             "Platform": "android",
-//             "SID": "1707129850016-19612",
-//             "TS": "undefined", // Consider addressing the "undefined" value
-//             "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJiZ21pUHJvZmlsZUlkIjo0Mzc5MjksImV4cCI6MTcxNTM0OTc0NiwiZnJlZWZpcmVQcm9maWxlSWQiOjQzNzkzOCwiaWF0IjoxNzEyNzU3NzQ2LCJpZCI6NTA5NjIxfQ.VOEBhA8AaixrOaBt2p_RXUyX9juFHSqjaCzohlfb-mI"
-//         }
-//     };
-
-//     // Making the requests
-//     let response1 = http.get(url1, params);
-//     let response2 = http.get(url2, params);
-//     let response3 = http.get(url3, params); // New request for club gifts
-
-//     // Checks for the first and second requests are unchanged
-//     check(response1, {
-//         'API /user/join status is 200': (r) => r.status === 200,
-//         'API /user/join body is not empty': (r) => r.body.length > 0,   
-//     });
-
-//     check(response2, {
-//         'API /channels status is 200': (r) => r.status === 200,
-//         'API /channels body is not empty': (r) => r.body.length > 0,
-//     });
-
-//     // Checks for the new request
-//     check(response3, {
-//         'API /club-gifts status is 200': (r) => r.status === 200,
-//         'API /club-gifts body is not empty': (r) => r.body.length > 0,
-//     });
-
-//     // Logging responses
-//     // console.log('Response from /user/join:', response1.body);
-//     // console.log('Response from /channels:', response2.body);
-//     // console.log('Response from /club-gifts:', response3.body); // Log the new response
-// }
-
-
-
-
-// // import http from 'k6/http';
-// // import { check, sleep } from 'k6';
-
-// // export const options = {
-// //     vus: 10,
-// //     duration: '10s',
-// //     // stages: [
-// //     //     { duration: '10s', target: 30 },
-// //     //     { duration: '10s', target: 50 },
-// //     //     { duration: '20s', target: 5 },
-// //     //   ],
-// // };
-
-// // const BASE_URL = 'https://stage-api.getstan.app'; // Define BASE_URL
-
-// // const generatePhoneNumber = () => {
-// //     let number = Math.floor(10 ** 8 + Math.random() * (9 * (10 ** 8)));
-// //     return '+919' + number;
-// // };
-
-// // export default function () {
-// //   const headers = {
-// //     "Accept": "application/json, text/plain, */*",
-// //     "Content-Type": "application/json",
-// //     "GameId": "bgmi",
-// //     "AppVersion": "94",
-// //     "Platform": "android",
-// //     "SID": "1689061440422-74140",
-// //     "TS": "877888888888"
-// //   };
-  
-// //   const phone = generatePhoneNumber(); // Correctly declare phone a single time
-// //   console.log("======USER PHONE======", phone);
-  
-// //   // Send OTP
-// //   const sendOtpResponse = http.post(`${BASE_URL}/api/v1/auth/otp/send`, JSON.stringify({ phone }), { headers });
-// //   check(sendOtpResponse, { 'OTP sent successfully.': (resp) => resp.status === 200 });
-// //   sleep(1); // Adjust sleep as needed
-
-// //   // Assuming OTP is '5555', prepare payload for verification
-// //   const payload = JSON.stringify({
-// //     "phone": phone,
-// //     "otp": "5555",
-// //     "deviceInfo": {
-// //       "APP_TYPE": "android",
-// //       "DeviceData": {
-// //         "deviceUID": "36e27f877d1a7c24"
-// //       }
-// //     },
-// //     "utmPayload": {},
-// //     "campaignUrl": "",
-// //     "sessionId": null,
-// //     "referralCode": null,
-// //     "provider": ""
-// //   });
-
-// //   // Verify OTP
-// //   const verifyOtpResponse = http.post(`${BASE_URL}/api/v4/verify/otp`, payload, { headers });
-// //   check(verifyOtpResponse, {
-// //     "OTP verified successfully for different numbers": (r) => r.status === 200 || r.status === 400
-// //   });
-
-// //   // Log based on verification result
-// //   if (verifyOtpResponse.status === 200 || verifyOtpResponse.status === 400) {
-// //     console.log(`OTP verified successfully for ${phone}.`);
-// //   } else {
-// //     console.log(`Verification failed for ${phone}.`);
-// //   }
-
-// //   console.log(`Response body for ${phone}: ${verifyOtpResponse.body}`);
-// //   sleep(1); // Adjust sleep as needed
-  
-// // }
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
 
 import http from 'k6/http';
+import { check } from 'k6';
+
+
+export function handleSummary(data) {
+    return {
+      "results.html": htmlReport(data),
+      stdout: textSummary(data, { indent: " ", enableColors: true }),
+    };
+  }
+ 
+export const options = {
+    vus: 10,
+    duration: '5s',
+    thresholds: {
+        checks: ['rate==1.00'], // Ensure 100% of checks must pass
+    },
+};
+
 
 export default function () {
-    // Define request headers
+    // Define request headers from original fetch API example
     let headers = {
         "Accept": "application/json, text/plain, */*",
-        "gaid": "72B950AE-AED3-45E4-ACDE-7C8E1DFD2AA7",
-        "AppVersion": "113",
-        "Platform": "ios",
-        "SID": "1712833100712-21743",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJiZ21pUHJvZmlsZUlkIjoxMjk5NCwiZXhwIjoxNzEyOTI2NzkyLCJmcmVlZmlyZVByb2ZpbGVJZCI6MTI5OTUsImlhdCI6MTcxMjg0MDM5MiwiaWQiOjE2NDk5fQ.IBKgjD-ygDgH3mXOQ1EbXd0yCW1SWKBJiESiuISzBt8"
+        "gaid": "e3e92938-0b86-4ac5-9270-08e85ee30b0c",
+        "AppVersion": "120",
+        "Platform": "android",
+        "SID": "1719303489596-28317",
+        "TS": "undefined",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJiZ21pUHJvZmlsZUlkIjo0Mzc5MjksImV4cCI6MTcyMTkwOTI2MSwiZnJlZWZpcmVQcm9maWxlSWQiOjQzNzkzOCwiaWF0IjoxNzE5MzE3MjYxLCJpZCI6NTA5NjIxfQ.6GqMEOtf0KfNCUmXX_ZDKH45lv7f4O7b7ryWMWKDLgQ"
     };
 
-    // Define request options
-    let options = {
-        headers: headers
-    };
+   
+    let getLiveClubs = http.get("https://api.getstan.app/api/v5/get/live-clubs?limit=10&offset=0", { headers: headers });
 
-    // Send GET request
-    let response = http.get("https://stage-api.getstan.app/api/v5/get/clubs?status=live&limit=10&offset=0&category=All", options);
+   
+    check(getLiveClubs, {
+        'live-clubs? status is 200': r => r.status === 200,
+        'live-clubs? body is not empty': (r) => r.body.length > 0,
+     });
+     if (getLiveClubs.status !== 200) {
+        console.log('Response received: ' + getLiveClubs.body);
+      }
 
-    // Print response status code
-    console.log("Response status code: " + response.status);
+
+    let getUpcominClubs = http.get("https://api.getstan.app/api/v5/get/upcoming-clubs?limit=10&offset=0", { headers: headers });
+    check(getUpcominClubs, {
+        "upcoming-clubs? status 200": (r) => r.status === 200,
+        "upcoming-clubs? body is not empty": (r) => r.body.length > 0
+    });
+    
+    if (getUpcominClubs.status !== 200) {
+        console.log('Response received: ' + getUpcominClubs.body);
+      }
+
+
+    // let ur3 = 'https://api.getstan.app/api/v5/club/messages?clubId=AGPCIUE7';
+    let clubMessages = http.get("https://api.getstan.app/api/v5/club/messages", { headers: headers });
+    check(clubMessages, {
+        "club/messages? status 200": (r) => r.status === 200,
+        "club/messages? body  is not empty": (r) => r.body.length > 0
+    });
+
+    if (clubMessages.status !== 200) {
+        console.log('Response received: ' + clubMessages.body);
+      }
+
+
+    let ClubPassBalance = http.get("https://api.getstan.app/api/v4/club-pass/balance", { headers: headers });
+    check(ClubPassBalance, {
+        "club-pass/balance status 200": (r) => r.status === 200,
+        "club-pass/balance body  is not empty": (r) => r.body.length > 0
+    });
+
+    if (ClubPassBalance.status !== 200) {
+        console.log('Response received: ' + ClubPassBalance.body);
+      }
+
+    let clubGiftFetch = http.get("https://api.getstan.app/api/v4/club-gift/fetch-inventory", { headers: headers });
+    check(clubGiftFetch, {
+        "club-gift/fetch-inventory status 200": (r) => r.status === 200,
+        "club-gift/fetch-inventory body  is not empty": (r) => r.body.length > 0
+    });
+
+    if (clubGiftFetch.status !== 200) {
+        console.log('Response received: ' + clubGiftFetch.body);
+      }
+
+
+
+    let agoraClubGifts = http.get("https://api.getstan.app/api/v1/agora/club-gifts", { headers: headers });
+    check(agoraClubGifts, {
+        "agora/club-gifts status 200": (r) => r.status === 200,
+        "agora/club-gifts body  is not empty": (r) => r.body.length > 0
+    });
+
+    if (agoraClubGifts.status !== 200) {
+        console.log('Response received: ' + agoraClubGifts.body);
+      }
+
+
+
+    let clubPassGetSku = http.get("https://api.getstan.app/api/v4/club-pass/getSKU", { headers: headers });
+    check(clubPassGetSku, {
+        "club-pass/getSKU status 200": (r) => r.status === 200,
+        "club-pass/getSKU body  is not empty": (r) => r.body.length > 0
+    });
+
+    if (clubPassGetSku.status !== 200) {
+        console.log('Response received: ' + clubPassGetSku.body);
+      }
+
+
+
+    let clubsRewards = http.get("https://api.getstan.app/api/v5/clubs/rewards", { headers: headers });
+    check(clubsRewards, {
+        "clubs/rewards status 200": (r) => r.status === 200,
+        "clubs/rewards body  is not empty": (r) => r.body.length > 0
+    });
+
+    if (clubsRewards.status !== 200) {
+        console.log('Response received: ' + clubsRewards.body);
+      }
+
+
+    let clubPastRewards = http.get("https://api.getstan.app/api/v5/clubs/rewards/past", { headers: headers });
+    check(clubPastRewards, {
+        "clubs/rewards/paststatus 200": (r) => r.status === 200,
+        "clubs/rewards/past body  is not empty": (r) => r.body.length > 0
+    });
+
+    if (clubPastRewards.status !== 200) {
+        console.log('Response received: ' + clubPastRewards.body);
+      }
+
+
+    let userClub = http.get("https://api.getstan.app/api/v5/user/club", { headers: headers });
+    check(userClub, {
+        "user/club status 200": (r) => r.status === 200,
+        "user/club body  is not empty": (r) => r.body.length > 0
+    });
+
+    if (userClub.status !== 200) {
+        console.log('Response received: ' + userClub.body);
+      }
+
+    let clubCategories = http.get("https://api.getstan.app/api/v5/club/categories", { headers: headers });
+    check(clubCategories, {
+        "club/categories status 200": (r) => r.status === 200,
+        "club/categories body  is not empty": (r) => r.body.length > 0
+    });
+
+    if (clubCategories.status !== 200) {
+        console.log('Response received: ' + clubCategories.body);
+      }
+
+    // console.log(`Response time for live-clubs endpoint: ${response.timings.duration} ms`);
 }
