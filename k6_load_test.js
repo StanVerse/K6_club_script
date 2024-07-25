@@ -27,11 +27,11 @@ export default function () {
     let headers = {
         "Accept": "application/json, text/plain, */*",
         "gaid": "e3e92938-0b86-4ac5-9270-08e85ee30b0c",
-        "AppVersion": "120",
+        "AppVersion": "123",
         "Platform": "android",
         "SID": "1719303489596-28317",
         "TS": "undefined",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJiZ21pUHJvZmlsZUlkIjo0Mzc5MjksImV4cCI6MTcyNDUwMjEyNywiZnJlZWZpcmVQcm9maWxlSWQiOjQzNzkzOCwiaWF0IjoxNzIxOTEwMTI3LCJpZCI6NTA5NjIxfQ.GCKnAQObcrmhgeQ8yvu-UkuKy2uTUYOkBbeBawTSvlI"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJiZ21pUHJvZmlsZUlkIjo0Mzc5MjksImV4cCI6MTcyNDUwMzMxMSwiZnJlZWZpcmVQcm9maWxlSWQiOjQzNzkzOCwiaWF0IjoxNzIxOTExMzExLCJpZCI6NTA5NjIxfQ.McuOseAy5f_IxeocR0dGVmLTKWMmy7s2IPbH4b3Tup8"
     };
 
    
